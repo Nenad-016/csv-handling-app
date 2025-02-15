@@ -47,8 +47,10 @@ class ProductRepository implements ProductRepositoryInterface
       $product = $this->model->find($id);
         if ($product) {
             $product->delete();
+
             return true;
         }
+
         return false;
     }
 }

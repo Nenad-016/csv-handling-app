@@ -93,4 +93,21 @@ class ProductController extends Controller
 
         return $this->response(200, 'Product deleted successfully');
     }
+
+    public function exportByCategory($categoryId)
+    {
+        try {
+            $filepath = $this->productService->exportProductsByCategory($categoryId);
+            $filename = basename($filepath);
+
+            return response()->json([
+                'message' => 'Products exported successfully.',
+                'csv_path_in_project' => url('/storage/csv/' . $filename),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to export products: ' . $e->getMessage(),
+            ], 400);
+        }
+    }
 }
