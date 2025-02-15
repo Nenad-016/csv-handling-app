@@ -19,22 +19,28 @@ class ProductRepository implements ProductRepositoryInterface
       return $this->model->all();
     }
 
-    public function findByCategory($categoryId): Product
+    public function findByCategory($categoryId): Product|Collection|null
     {
-      return $this->model->where('category_id', $categoryId)->get();
+        $products = $this->model->where('category_id', $categoryId)->get();
+
+        if ($products->count() === 1) {
+            return $products->first();
+        }
+
+        return $products->isNotEmpty() ? $products : null;
     }
 
     public function update($id, array $data): ?Product
     {
       $product = $this->model->find($id);
       if (!$product) {
-          return null; 
+          return null;
       }
 
       $product->update($data);
 
       return $product;
-    }    
+    }
 
     public function delete($id): bool
     {

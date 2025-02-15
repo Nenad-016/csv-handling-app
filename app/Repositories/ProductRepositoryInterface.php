@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface ProductRepositoryInterface
 {
-    public function getAll(): Collection;     
-    public function findByCategory($categoryId): Product;      
-    public function update($id, array $data): ?Product; 
-    public function delete($id): bool; 
+    public function getAll(): Collection;
+    public function findByCategory($categoryId): Collection|Product|null;
+    public function update($id, array $data): ?Product;
+    public function delete($id): bool;
 }
 
