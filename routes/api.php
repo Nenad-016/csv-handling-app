@@ -20,13 +20,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'categories', 'middleware' => 'api'], function () {
+Route::group(['prefix' => '/categories'], function () {
     Route::get('', [CategoryController::class, 'index']);
     Route::put('/{id}', [CategoryController::class, 'update']);
     Route::delete('/{id}', [CategoryController::class, 'destroy']);
 });
 
-Route::group(['prefix' => 'products', 'middleware' => 'api'], function () {
+Route::group(['prefix' => 'products'], function () {
     Route::get('', [ProductController::class, 'index']);
     Route::put('/{id}', [ProductController::class, 'showByCategory']);
     Route::delete('/{id}', [ProductController::class, 'update']);
