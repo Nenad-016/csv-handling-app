@@ -48,7 +48,7 @@ php artisan migrate
 php artisan import:csv /path/to/your/file.csv
 ```
 
-### 4️⃣  option 2️⃣  Run Seeader to populate data base automaticly, file must be namet product_categories.csv and to be located at storage/app/imports/product_categories.csv
+### 4️⃣  option 2️⃣  Run Seeader to populate data base automaticly, file must be named product_categories.csv and to be located at storage/app/imports/product_categories.csv
 
 ```sh
 php artisan migrate --seed
