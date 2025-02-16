@@ -89,7 +89,7 @@ php artisan serve
 
 - Generates a CSV file for products in a selected category.
 - The filename follows this format: **category\_name\_YYYY\_MM\_DD-HH\_MM.csv**
-- The CSV is stored in `storage/app/public/csv/` and can be downloaded via the API response.
+- The CSV is stored in `storage/app/exports/`.
 
 
 
