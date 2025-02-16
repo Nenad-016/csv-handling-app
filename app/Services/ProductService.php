@@ -21,6 +21,11 @@ class ProductService
         return $this->productRepository->getAll();
     }
 
+    public function getProductById($id): ?Product
+    {
+        return $this->productRepository->findById($id);
+    }
+
     public function getProductsByCategory($categoryId): Collection|Product|null
     {
         return $this->productRepository->findByCategory($categoryId);

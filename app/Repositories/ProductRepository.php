@@ -19,6 +19,11 @@ class ProductRepository implements ProductRepositoryInterface
       return $this->model->all();
     }
 
+    public function findById($id): ?Product
+    {
+        return $this->model->find($id);
+    }
+
     public function findByCategory($categoryId): Product|Collection|null
     {
         $products = $this->model->where('category_id', $categoryId)->get();

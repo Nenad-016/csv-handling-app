@@ -37,6 +37,20 @@ class ProductController extends Controller
         );
     }
 
+    public function show($id)
+    {
+        try {
+            $product = $this->productService->getProductById($id);
+            if (!$product) {
+                return $this->response(404, 'Product not found');
+            }
+        } catch (\Exception $e) {
+            return $this->response(400, $e->getMessage());
+        }
+
+        return $this->response(200, 'Product retrieved successfully', new ProductResource($product));
+    }
+
     public function showByCategory($categoryId)
     {
         try {
