@@ -21,7 +21,12 @@ class CategoryService
         return $this->categoryRepository->getAll();
     }
 
-    public function updateCategory($id, array $data): void 
+    public function getCategoryById($id): ?Category
+    {
+        return $this->categoryRepository->findById($id);
+    }
+
+    public function updateCategory($id, array $data): void
     {
 
         $this->categoryRepository->update($id, $data);

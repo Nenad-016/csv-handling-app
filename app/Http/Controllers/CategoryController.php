@@ -34,6 +34,24 @@ class CategoryController extends Controller
             );
     }
 
+    public function show($id)
+    {
+        try {
+            $category = $this->categoryService->getCategoryById($id);
+            if (!$category) {
+                return $this->response(404, 'No category');
+            }
+        } catch (\Exception $e) {
+            return $this->response(400, $e->getMessage());
+        }
+
+        return $this->response(
+            200,
+            'Category record retrieved successfully',
+            new CategoryResource($category)
+        );
+    }
+
     public function update($id, CategoryRequest $request)
     {
         $data = $request->only(['name', 'deparment_name']);
