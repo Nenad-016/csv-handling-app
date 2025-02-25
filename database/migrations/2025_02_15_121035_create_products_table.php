@@ -23,8 +23,8 @@ return new class extends Migration
             $table->string('manufacturer_name');
             $table->string('upc')->unique();
             $table->string('sku')->unique();
-            $table->decimal('regular_price', 8, 2);
-            $table->decimal('sale_price', 8, 2);
+            $table->unsignedDecimal('regular_price', 8, 2);
+            $table->unsignedDecimal('sale_price', 8, 2);
             $table->text('description')->nullable();
             $table->timestamps();
         });
