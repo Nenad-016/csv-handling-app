@@ -30,9 +30,10 @@ Route::group(['prefix' => '/categories'], function () {
 
 Route::group(['prefix' => 'products'], function () {
     Route::get('', [ProductController::class, 'index']);
-    Route::get('/category/{id}', [ProductController::class, 'showByCategory']);
-    Route::put('/{id}', [ProductController::class, 'update']);
-    Route::delete('/{id}', [ProductController::class, 'destroy']);
-    Route::get('/export/{categoryId}', [ProductController::class, 'exportByCategory']);
+    Route::get('/category/{category}', [ProductController::class, 'showByCategory']);
+    Route::get('/export/{category}', [ProductController::class, 'exportByCategory']);
+    Route::get('/{product}', [ProductController::class, 'show']);
+    Route::put('/{product}', [ProductController::class, 'update']);
+    Route::delete('/{product}', [ProductController::class, 'destroy']);
 });
-Route::get('/product/{id}', [ProductController::class, 'show']);
+

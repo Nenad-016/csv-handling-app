@@ -2,14 +2,15 @@
 
 namespace App\Services;
 
-use App\Repositories\ProductRepositoryInterface;
 use App\Models\Product;
+use App\Models\Category;
+use App\Repositories\ProductRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 class ProductService
 {
-    protected $productRepository;
+    protected ProductRepositoryInterface $productRepository;
 
     public function __construct(ProductRepositoryInterface $productRepository)
     {
@@ -21,40 +22,38 @@ class ProductService
         return $this->productRepository->getAll();
     }
 
-    public function getProductById($id): ?Product
+    public function getProduct(Product $product): Product
     {
-        return $this->productRepository->findById($id);
+        return $this->productRepository->show($product);
     }
 
-    public function getProductsByCategory($categoryId): Collection|Product|null
+    public function getProductsByCategory(Category $category): Collection
     {
-        return $this->productRepository->findByCategory($categoryId);
+        return $this->productRepository->findByCategory($category);
     }
 
-    public function updateProduct($id, array $data): ?Product
+    public function updateProduct(Product $product, array $data): ?Product
     {
-        return $this->productRepository->update($id, $data);
+        return $this->productRepository->update($product, $data);
     }
 
-    public function deleteProduct($id): bool
+    public function deleteProduct(Product $product): bool
     {
-        return $this->productRepository->delete($id);
+        return $this->productRepository->delete($product);
     }
 
-    public function exportProductsByCategory($categoryId): string
+    public function exportProductsByCategory(Category $category): string
     {
-        $products = $this->productRepository->findByCategory($categoryId);
+        $products = $this->productRepository->findByCategory($category);
 
         if ($products->isEmpty()) {
             throw new \Exception("No products found for this category.");
         }
 
-        $categoryName = $products->first()->category->name ?? 'unknown';
+        $categoryName = $products->first()?->category?->name ?? 'unknown';
 
         $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '_', $categoryName));
-
         $timestamp = Carbon::now()->format('Y_m_d-H_i');
-
         $filename = "{$slug}_{$timestamp}.csv";
 
         $directory = storage_path('app/exports');
@@ -64,7 +63,6 @@ class ProductService
         $filepath = $directory . DIRECTORY_SEPARATOR . $filename;
 
         $file = fopen($filepath, 'w');
-
         fputcsv($file, [
             'ID',
             'Product Number',

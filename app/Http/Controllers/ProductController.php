@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-namespace App\Http\Controllers;
-
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Http\Traits\ResponseTrait;
+use App\Models\Product;
+use App\Models\Category;
 use App\Services\ProductService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
@@ -19,7 +21,7 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
 
-    public function index()
+    public function index(): Response
     {
         try {
             $products = $this->productService->getAllProducts();
@@ -37,10 +39,10 @@ class ProductController extends Controller
         );
     }
 
-    public function show($id)
+    public function show(Product $product): Response
     {
         try {
-            $product = $this->productService->getProductById($id);
+            $product = $this->productService->getProduct($product);
             if (!$product) {
                 return $this->response(404, 'Product not found');
             }
@@ -48,13 +50,17 @@ class ProductController extends Controller
             return $this->response(400, $e->getMessage());
         }
 
-        return $this->response(200, 'Product retrieved successfully', new ProductResource($product));
+        return $this->response(
+            200,
+            'Product retrieved successfully',
+            new ProductResource($product)
+        );
     }
 
-    public function showByCategory($categoryId)
+    public function showByCategory(Category $category): Response
     {
         try {
-            $products = $this->productService->getProductsByCategory($categoryId);
+            $products = $this->productService->getProductsByCategory($category);
             if ($products->isEmpty()) {
                 return $this->response(404, 'No products found for this category');
             }
@@ -69,7 +75,7 @@ class ProductController extends Controller
         );
     }
 
-    public function update($id, ProductRequest $request)
+    public function update(Product $product, ProductRequest $request): Response
     {
         $data = $request->only([
             'product_number',
@@ -83,21 +89,25 @@ class ProductController extends Controller
         ]);
 
         try {
-            $product = $this->productService->updateProduct($id, $data);
-            if (!$product) {
+            $updatedProduct = $this->productService->updateProduct($product, $data);
+            if (!$updatedProduct) {
                 return $this->response(404, 'Product not found');
             }
         } catch (\Exception $e) {
             return $this->response(400, 'Failed to update product: ' . $e->getMessage());
         }
 
-        return $this->response(200, 'Product updated successfully', new ProductResource($product));
+        return $this->response(
+            200,
+            'Product updated successfully',
+            new ProductResource($updatedProduct)
+        );
     }
 
-    public function destroy($id)
+    public function destroy(Product $product): Response
     {
         try {
-            $deleted = $this->productService->deleteProduct($id);
+            $deleted = $this->productService->deleteProduct($product);
             if (!$deleted) {
                 return $this->response(404, 'Product not found');
             }
@@ -108,10 +118,10 @@ class ProductController extends Controller
         return $this->response(200, 'Product deleted successfully');
     }
 
-    public function exportByCategory($categoryId)
+    public function exportByCategory(Category $category): JsonResponse
     {
         try {
-            $filepath = $this->productService->exportProductsByCategory($categoryId);
+            $filepath = $this->productService->exportProductsByCategory($category);
             $filename = basename($filepath);
 
             return response()->json([
