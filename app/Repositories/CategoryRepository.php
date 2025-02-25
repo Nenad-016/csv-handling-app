@@ -1,11 +1,9 @@
 <?php
 
-
 namespace App\Repositories;
 
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
-
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
@@ -13,36 +11,27 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function __construct(Category $category)
     {
-      $this->model = $category;
+        $this->model = $category;
     }
-    
+
     public function getAll(): Collection
     {
         return $this->model->all();
     }
 
-    public function findById($id): Category
+    public function show(Category $category): Category
     {
-        return $this->model->find($id);
+        return $category;
     }
 
-    public function update($id, array $data): ?Category
+    public function update(Category $category, array $data): ?Category
     {
-        $category = $this->model->find($id);
-        if ($category) {
-            $category->update($data);
-            return $category;
-        }
-        return null;
+        $category->update($data);
+        return $category;
     }
 
-    public function delete($id): bool
+    public function delete(Category $category): bool
     {
-        $category = $this->model->find($id);
-        if ($category) {
-            $category->delete();
-            return true;
-        }
-        return false;
+        return (bool) $category->delete();
     }
 }

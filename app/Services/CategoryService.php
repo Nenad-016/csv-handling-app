@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Services;
 
 use App\Models\Category;
@@ -21,20 +20,18 @@ class CategoryService
         return $this->categoryRepository->getAll();
     }
 
-    public function getCategoryById($id): ?Category
+    public function getCategory(Category $category): Category
     {
-        return $this->categoryRepository->findById($id);
+        return $this->categoryRepository->show($category);
     }
 
-    public function updateCategory($id, array $data): void
+    public function updateCategory(Category $category, array $data): ?Category
     {
-
-        $this->categoryRepository->update($id, $data);
+        return $this->categoryRepository->update($category, $data);
     }
 
-    public function deleteCategory($id): void
+    public function deleteCategory(Category $category): bool
     {
-        $this->categoryRepository->delete($id);
+        return $this->categoryRepository->delete($category);
     }
-
 }

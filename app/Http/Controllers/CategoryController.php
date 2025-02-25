@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Traits\ResponseTrait;
+use App\Models\Category;
 use App\Services\CategoryService;
+use Illuminate\Http\Response;
 
 class CategoryController extends Controller
 {
@@ -17,7 +19,7 @@ class CategoryController extends Controller
         $this->categoryService = $categoryService;
     }
 
-    public function index()
+    public function index(): Response
     {
         try {
             $categories = $this->categoryService->getCategories();
@@ -27,17 +29,18 @@ class CategoryController extends Controller
         } catch (\Exception $e) {
             return $this->response(400, $e->getMessage());
         }
-            return $this->response(
-                200,
-                'Categories retrieved successfully',
-                CategoryResource::collection($categories)
-            );
+
+        return $this->response(
+            200,
+            'Categories retrieved successfully',
+            CategoryResource::collection($categories)
+        );
     }
 
-    public function show($id)
+    public function show(Category $category): Response
     {
         try {
-            $category = $this->categoryService->getCategoryById($id);
+            $category = $this->categoryService->getCategory($category);
             if (!$category) {
                 return $this->response(404, 'No category');
             }
@@ -52,12 +55,12 @@ class CategoryController extends Controller
         );
     }
 
-    public function update($id, CategoryRequest $request)
+    public function update(Category $category, CategoryRequest $request): Response
     {
         $data = $request->only(['name', 'deparment_name']);
 
         try {
-            $this->categoryService->updateCategory($id, $data);
+            $this->categoryService->updateCategory($category, $data);
         } catch (\Exception $e) {
             return $this->response(400, 'Failed to update category: ' . $e->getMessage());
         }
@@ -65,10 +68,10 @@ class CategoryController extends Controller
         return $this->response(200, 'Category updated successfully');
     }
 
-    public function destroy($id)
+    public function destroy(Category $category): Response
     {
         try {
-            $this->categoryService->deleteCategory($id);
+            $this->categoryService->deleteCategory($category);
         } catch (\Exception $e) {
             return $this->response(400, 'Failed to delete category: ' . $e->getMessage());
         }
