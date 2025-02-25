@@ -18,6 +18,11 @@ class Product extends Model
         'regular_price', 'sale_price', 'description'
     ];
 
+    protected $casts = [
+        'regular_price' => 'float',
+        'sale_price' => 'float',
+    ];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
