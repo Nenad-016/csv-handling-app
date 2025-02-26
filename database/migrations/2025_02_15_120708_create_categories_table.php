@@ -7,20 +7,18 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * @var string
-     */
-    private string $tableName = 'categories';
-
-    /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create($this->tableName, function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('deparment_name')->nullable();
+            $table->string('deparment_name')->nullable(); // Vraćeno na originalno ime
             $table->timestamps();
+
+            $table->softDeletes();
+            $table->index(['created_at', 'updated_at']);
         });
     }
 
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists($this->tableName);
+        Schema::dropIfExists('categories');
     }
 };

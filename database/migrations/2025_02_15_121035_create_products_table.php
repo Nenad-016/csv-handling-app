@@ -7,26 +7,24 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * @var string
-     */
-    private string $tableName = 'products';
-
-    /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create($this->tableName, function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('product_number')->unique();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->string('manufacturer_name');
             $table->string('upc')->unique();
             $table->string('sku')->unique();
-            $table->unsignedDecimal('regular_price', 8, 2);
-            $table->unsignedDecimal('sale_price', 8, 2);
+            $table->decimal('regular_price', 8, 2);
+            $table->decimal('sale_price', 8, 2);
             $table->text('description')->nullable();
             $table->timestamps();
+
+            $table->softDeletes();
+            $table->index(['created_at', 'updated_at']);
         });
     }
 
@@ -35,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists($this->tableName);
+        Schema::dropIfExists('products');
     }
 };
