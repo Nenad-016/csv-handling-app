@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
+use App\DTOs\CategoryDTO;
+
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
@@ -24,10 +26,14 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $category;
     }
 
-    public function update(Category $category, array $data): ?Category
+    public function update(Category $category, CategoryDTO $data): ?Category
     {
-        $category->update($data);
-        return $category;
+        $category->update([
+            'name' => $data->name,
+            'deparment_name' => $data->deparment_name,
+        ]);
+
+        return $category->fresh();
     }
 
     public function delete(Category $category): bool
